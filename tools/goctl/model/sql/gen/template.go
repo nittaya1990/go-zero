@@ -3,13 +3,13 @@ package gen
 import (
 	"fmt"
 
-	"github.com/urfave/cli"
 	"github.com/zeromicro/go-zero/tools/goctl/model/sql/template"
 	"github.com/zeromicro/go-zero/tools/goctl/util/pathx"
 )
 
 const (
 	category                              = "model"
+	customizedTemplateFile                = "customized.tpl"
 	deleteTemplateFile                    = "delete.tpl"
 	deleteMethodTemplateFile              = "interface-delete.tpl"
 	fieldTemplateFile                     = "field.tpl"
@@ -22,8 +22,10 @@ const (
 	importsWithNoCacheTemplateFile        = "import-no-cache.tpl"
 	insertTemplateFile                    = "insert.tpl"
 	insertTemplateMethodFile              = "interface-insert.tpl"
-	modelTemplateFile                     = "model.tpl"
+	modelGenTemplateFile                  = "model-gen.tpl"
+	modelCustomTemplateFile               = "model.tpl"
 	modelNewTemplateFile                  = "model-new.tpl"
+	tableNameTemplateFile                 = "table-name.tpl"
 	tagTemplateFile                       = "tag.tpl"
 	typesTemplateFile                     = "types.tpl"
 	updateTemplateFile                    = "update.tpl"
@@ -33,6 +35,7 @@ const (
 )
 
 var templates = map[string]string{
+	customizedTemplateFile:                template.Customized,
 	deleteTemplateFile:                    template.Delete,
 	deleteMethodTemplateFile:              template.DeleteMethod,
 	fieldTemplateFile:                     template.Field,
@@ -45,8 +48,10 @@ var templates = map[string]string{
 	importsWithNoCacheTemplateFile:        template.ImportsNoCache,
 	insertTemplateFile:                    template.Insert,
 	insertTemplateMethodFile:              template.InsertMethod,
-	modelTemplateFile:                     template.Model,
+	modelGenTemplateFile:                  template.ModelGen,
+	modelCustomTemplateFile:               template.ModelCustom,
 	modelNewTemplateFile:                  template.New,
+	tableNameTemplateFile:                 template.TableName,
 	tagTemplateFile:                       template.Tag,
 	typesTemplateFile:                     template.Types,
 	updateTemplateFile:                    template.Update,
@@ -66,11 +71,11 @@ func Clean() error {
 }
 
 // GenTemplates creates template files if not exists
-func GenTemplates(_ *cli.Context) error {
+func GenTemplates() error {
 	return pathx.InitTemplates(category, templates)
 }
 
-// RevertTemplate recovers the delete template files
+// RevertTemplate reverts the deleted template files
 func RevertTemplate(name string) error {
 	content, ok := templates[name]
 	if !ok {
